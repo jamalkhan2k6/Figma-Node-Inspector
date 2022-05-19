@@ -22,13 +22,18 @@ const poll = () => {
 
 const nodeToObject = (node, filterText) => {
 	const props = Object.entries(Object.getOwnPropertyDescriptors(node.__proto__));
-	const blacklist = ['parent', 'children', 'removed'];
+	const blacklist = ['parent', 'children', 'removed', 'textTruncation'];
+	// const blacklist = ['parent', 'children', 'removed'];
+	const depreciated_list = ['textTruncation'];
+
 	let obj: any = { id: node.id, type: node.type, children: undefined };
+	// console.log(obj);
 	if (node.parent) obj.parent = { id: node.parent.id, type: node.type };
 	for (const [name, prop] of props) {
 		if (prop.get && blacklist.indexOf(name) < 0) {
 			obj[name] = prop.get.call(node);
 			if (typeof obj[name] === 'symbol') obj[name] = 'Mixed';
+			
 		}
 	}
 	if (filterText.trim() !== '') {
